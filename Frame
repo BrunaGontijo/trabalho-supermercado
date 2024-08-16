@@ -1,0 +1,77 @@
+from tkinter import *
+from tkinter import ttk
+
+app = Tk();
+app.title = "Controle";
+app.geometry("520x1080");
+
+notebook = ttk.Notebook(app, width="520", height="1080");
+notebook.grid();
+
+frameEstoque = Frame(notebook, width="260");
+frameEstoque.grid();
+
+frameCompras = Frame(notebook, width="260");
+frameCompras.grid();
+
+
+frameVendas = Frame(notebook, width="260");
+frameVendas.grid();
+
+frameHistorico = Frame(notebook, width="260");
+frameVendas.grid();
+
+notebook.add(frameCompras, text="Compras")
+notebook.add(frameVendas, text="Vendas")
+notebook.add(frameHistorico, text="Historico")
+notebook.add(frameEstoque, text="Estoque")
+
+# criação dos widgets 
+Label(frameEstoque, text="Item:").grid(row=0, column=0, padx=10, pady=10)
+Entry(frameEstoque).grid(row=0, column=1, padx=10, pady=10)
+Label(frameEstoque, text="Codigo:").grid(row=1, column=0, padx=10, pady=10)
+Entry(frameEstoque).grid(row=1, column=1, padx=10, pady=10)
+Label(frameEstoque, text="Quantidade:").grid(row=2, column=0, padx=10, pady=10)
+Entry(frameEstoque).grid(row=2, column=1, padx=10, pady=10)
+Label(frameEstoque, text="Preço:").grid(row=3, column=0, padx=10, pady=10)
+Entry(frameEstoque).grid(row=3, column=1, padx=10, pady=10)
+ 
+# botões 
+Button(frameEstoque, text="confirmar").grid(column=1)
+
+# criação dos widgets 
+Label(frameVendas, text="Item").grid(row=0, column=0, padx=10, pady=10)
+Entry(frameVendas).grid()
+Label(frameVendas,text="Data de saida").grid(row=0, column=1, padx=10, pady=10)
+Entry(frameVendas).grid(row=1, column=1)
+Label(frameVendas,text="Categoria").grid(row=0,column=2, padx=10, pady=10)
+Entry(frameVendas).grid(row=1, column=2)
+# criação dos itens 
+Label(frameVendas, text="Preço").grid(row=0,column=3,padx=10, pady=10)
+Entry(frameVendas).grid(row=1, column=3)
+# botão
+Button(frameVendas, text="confirmar").grid(column=1)
+# compras
+Label(frameCompras, text="Item").grid(row=0, column=0, padx=10, pady=10)
+Entry(frameCompras).grid()
+Label(frameCompras,text="Data de saida").grid(row=0, column=1, padx=10, pady=10)
+Entry(frameCompras).grid(row=1, column=1)
+Label(frameCompras,text="Categoria").grid(row=0,column=2, padx=10, pady=10)
+Entry(frameCompras).grid(row=1, column=2)
+# criação dos itens 
+Label(frameCompras, text="Preço").grid(row=0,column=3,padx=10, pady=10)
+Entry(frameCompras).grid(row=1, column=3)
+# botão
+Button(frameCompras, text="confirmar").grid(column=1)
+
+# frame historico 
+Label(frameHistorico, text="Item:").grid(row=0, column=0, padx=10, pady=10)
+Entry(frameHistorico).grid(row=0, column=1, padx=10, pady=10)
+Label(frameHistorico,text="Data de saida").grid(row=1, column=0, padx=10, pady=10)
+Entry(frameHistorico).grid(row=1, column=1)
+# botão
+Button(frameHistorico, text="Buscar").grid(column=1)
+
+
+
+app.mainloop();
