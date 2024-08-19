@@ -1,0 +1,73 @@
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+
+
+def repor():
+    root0 = Tk()
+    root0.title("Reposição")
+    root0.geometry("700x700")
+
+    label_item = Label(root0, text="Nome do produto Desejado: ", width=25)
+    label_item.place(x=280,y=10)
+    entry_item = Entry(root0, width=30)
+    entry_item.place(x=280,y=40) 
+
+    label_codigo = Label(root0, text="Código do produto: ", width=25)
+    label_codigo.place(x=280,y=70)
+    entry_codigo = Entry(root0, width=30)
+    entry_codigo.place(x=280,y=100)
+
+    label_quantidade = Label(root0, text="Quantidade Desejada:", width=25)
+    label_quantidade.place(x=280,y=130)
+    entry_quantidade = Entry(root0, width=30)
+    entry_quantidade.place(x=280,y=160)
+
+    def destroy():
+        root0.destroy()
+    
+    def confirm():
+        if entry_item.get():
+            if entry_codigo.get():
+                if entry_quantidade.get():
+                    messagebox.showinfo('Cadastro', 'Reposição Efetuada Com Sucesso')
+                    root0.destroy()
+                else:
+                    messagebox.showerror('Cadastro', 'Alguma Área do Cadastro não Preenchida')
+
+
+
+    btn_voltar = Button(root0, text="Voltar", width=15, command=destroy)
+    btn_voltar.place(x=230,y=260)
+
+    btn_confirmar = Button(root0, text="Confirmar", width=15, command=confirm)
+    btn_confirmar.place(x=380,y=260)
+
+
+
+
+
+root = Tk()
+root.title = "Sistema"
+root.geometry("400x400")
+
+
+btn_estoque = Button(root, text="Ver Estoque", width=20, command=None)
+btn_estoque.place(x=150,y=30)
+
+btn_reposição = Button(root, text="Repor Produto", width=20, command=repor)
+btn_reposição.place(x=150,y=60)
+
+btn_fornecedor = Button(root, text="Fornecedores", width=20, command=None)
+btn_fornecedor.place(x=150,y=90)
+
+btn_historico = Button(root, text="Histórico de Vendas", width=20, command=None)
+btn_historico.place(x=150,y=120)
+
+
+
+
+
+
+
+root.mainloop()
