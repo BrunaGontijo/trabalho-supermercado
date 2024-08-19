@@ -1,0 +1,116 @@
+from tkinter import *
+from tkinter import ttk
+import mysql
+def mysql_connection(3306, root,acesso123, supermercado):
+    connection = connect(
+        host = 3306,
+        user = root,
+        passwd= acesso123,
+        database = supermercado
+    )
+    return connection 
+connection = mysql_connection('localhost','root','mysql123')
+query = '' CREATE DATABASE supermercado ''
+cursor = connection.cursor()
+cursor.excute(query)
+connection.close()
+# segunda conexão criação da tabela 
+connection = mysql_connection('localhost', 'root','mysql123', 'supermercado')
+query = ''''''
+      CREATE TABLE supermercado(id INT PRIMARY KEY,
+                                idsupermercado VARCHAR(100), 
+                                  supermercadocadocol VARCHAR (15),
+                                  compras VARCHAR (100)
+                                  vendas VARCHAR(50)
+                                  estoque VARCHAR(50))
+cursor = connection.cursor()
+cursor.excute(query)
+query = ''''''
+INSERT INTO supermercado VALUES 
+(Estoque,Vendas, Compras, Historico,Botões,)
+(Item, Data de saida, Categorias, Preços)
+cursor = connection.cursor()
+cursor.excute(query)
+connection.commit()
+# atualizar dados no mysql 
+query = ''' UPDATE compras SET estoque = 'leite ' WHERE id= 1006     '''
+cursor = connection.cursor()
+
+app = Tk();
+app.title = "Controle";
+app.geometry("520x1080");
+
+notebook = ttk.Notebook(app, width="520", height="1080");
+notebook.grid();
+
+frameEstoque = Frame(notebook, width="260");
+frameEstoque.grid();
+
+frameCompras = Frame(notebook, width="260");
+frameCompras.grid();
+
+
+
+frameVendas = Frame(notebook, width="260");
+frameVendas.grid();
+
+frameHistorico = Frame(notebook, width="260");
+frameVendas.grid();
+
+frameBotões = Frame(notebook, width="260"); 
+frameBotões.grid();
+
+notebook.add(frameCompras, text="Compras")
+notebook.add(frameVendas, text="Vendas")
+notebook.add(frameHistorico, text="Historico")
+notebook.add(frameEstoque, text="Estoque")
+notebook.add(frameBotões, text="Botões")
+# criação dos widgets 
+Label(frameEstoque, text="Item:").grid(row=0, column=0, padx=10, pady=10)
+Entry(frameEstoque).grid(row=0, column=1, padx=10, pady=10)
+Label(frameEstoque, text="Codigo:").grid(row=1, column=0, padx=10, pady=10)
+Entry(frameEstoque).grid(row=1, column=1, padx=10, pady=10)
+Label(frameEstoque, text="Quantidade:").grid(row=2, column=0, padx=10, pady=10)
+Entry(frameEstoque).grid(row=2, column=1, padx=10, pady=10)
+Label(frameEstoque, text="Preço:").grid(row=3, column=0, padx=10, pady=10)
+Entry(frameEstoque).grid(row=3, column=1, padx=10, pady=10)
+ 
+# botões 
+Button(frameEstoque, text="confirmar").grid(column=1)
+
+# criação dos widgets 
+Label(frameVendas, text="Item").grid(row=0, column=0, padx=10, pady=10)
+Entry(frameVendas).grid()
+Label(frameVendas,text="Data de saida").grid(row=0, column=1, padx=10, pady=10)
+Entry(frameVendas).grid(row=1, column=1)
+Label(frameVendas,text="Categoria").grid(row=0,column=2, padx=10, pady=10)
+Entry(frameVendas).grid(row=1, column=2)
+# criação dos itens 
+Label(frameVendas, text="Preço").grid(row=0,column=3,padx=10, pady=10)
+Entry(frameVendas).grid(row=1, column=3)
+# botão
+Button(frameVendas, text="confirmar").grid(column=1)
+# compras
+Label(frameCompras, text="Item").grid(row=0, column=0, padx=10, pady=10)
+Entry(frameCompras).grid()
+Label(frameCompras,text="Data de saida").grid(row=0, column=1, padx=10, pady=10)
+Entry(frameCompras).grid(row=1, column=1)
+Label(frameCompras,text="Categoria").grid(row=0,column=2, padx=10, pady=10)
+Entry(frameCompras).grid(row=1, column=2)
+
+# criação dos itens 
+Label(frameCompras, text="Preço").grid(row=0,column=3,padx=10, pady=10)
+Entry(frameCompras).grid(row=1, column=3)
+# botão
+Button(frameCompras, text="confirmar").grid(column=1)
+
+# frame historico 
+Label(frameHistorico, text="Item:").grid(row=0, column=0, padx=10, pady=10)
+Entry(frameHistorico).grid(row=0, column=1, padx=10, pady=10)
+Label(frameHistorico,text="Data de saida").grid(row=1, column=0, padx=10, pady=10)
+Entry(frameHistorico).grid(row=1, column=1)
+# botão
+Button(frameHistorico, text="Buscar").grid(column=1)
+
+
+app.mainloop();
