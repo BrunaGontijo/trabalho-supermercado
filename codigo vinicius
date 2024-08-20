@@ -1,0 +1,183 @@
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+
+fornecedor = []
+
+
+
+def atualizar():
+
+    global entry_mudar, root3
+    root3 = Tk()
+    root3.title("Atualizar Informações")
+    root3.geometry("700x700")
+
+    label_mudar = Label(root3, text="Nome do Fornecedor Que Você Gostaria de Mudar as Informações: ", width=80)
+    label_mudar.place(x=90,y=10)
+    entry_mudar = Entry(root3, width=30)
+    entry_mudar.place(x=270,y=40)
+
+    btn_pesquisar = Button(root3, text="Pesquisar", width=10, command=lupa)
+    btn_pesquisar.place(x=530,y=30)
+
+def lupa():
+    
+    global entry_mudar
+    if entry_mudar in fornecedor:
+        for i in fornecedor:
+            label_atualizar = Label(root3, text=i)
+            label_atualizar.place(x=270,y=60)
+
+
+def add_fornecedor():
+    root2 = Tk()
+    root2.title("Cadastro")
+    root2.geometry("700x700")
+
+    label_nome = Label(root2, text="Nome do fornecedor: ", width=25)
+    label_nome.place(x=280,y=10)
+    entry_nome = Entry(root2, width=30)
+    entry_nome.place(x=280,y=40) 
+
+    label_cpf = Label(root2, text="CPF/CNPJ: ", width=25)
+    label_cpf.place(x=280,y=70)
+    entry_cpf = Entry(root2, width=30)
+    entry_cpf.place(x=280,y=100)
+
+    label_quantidade = Label(root2, text="Tipo de Produto: ", width=25)
+    label_quantidade.place(x=280,y=130)
+    entry_quantidade = Entry(root2, width=30)
+    entry_quantidade.place(x=280,y=160)
+
+    label_endereço = Label(root2, text="Endereço do Fornecedor: ", width=25)
+    label_endereço.place(x=280,y=190)
+    entry_endereço = Entry(root2, width=30)
+    entry_endereço.place(x=280,y=220)
+
+    def confirm0():
+        if entry_nome.get():
+            if entry_cpf.get():
+                if entry_quantidade.get():
+                    if entry_endereço.get():
+                        messagebox.showinfo('Cadastro', 'Fornecedor Adicionado com Sucesso')
+                        add = {
+                            "Nome" : entry_nome.get(),
+                            "CPF/CNPJ" : entry_cpf.get(),
+                            "Quantidade" : entry_quantidade.get(),
+                            "Endereço" : entry_endereço.get()
+                        }
+                        fornecedor.append(add)
+
+                        root2.destroy()
+                        root1.destroy()
+                    else:
+                        messagebox.showerror('Cadastro', 'Alguma Área do Cadastro não Preenchida')
+
+
+    def destroy0():
+        root2.destroy()
+
+    btn_voltar = Button(root2, text="Voltar", width=15, command=destroy0)
+    btn_voltar.place(x=230,y=260)
+
+    btn_confirmar = Button(root2, text="Confirmar", width=15, command=confirm0)
+    btn_confirmar.place(x=380,y=260)
+
+def fornecedores():
+
+
+    global root1
+    root1 = Tk()
+    root1.title("Fornecedores")
+    root1.geometry("700x700")
+
+    label_opcoes = Label(root1, text="Escolha as Opções Abaixo: ", font=("Arial", 14), width=25)
+    label_opcoes.place(x=225,y=10)
+
+    def destroy1():
+        root1.destroy()
+
+
+    btn_ver = Button(root1, text="Ver Fornecedores", width=30, command=None)
+    btn_ver.place(x=250,y=60)
+    btn_add = Button(root1, text="Adicionar Fornecedor", width=30, command=add_fornecedor)
+    btn_add.place(x=250,y=110)
+    btn_atualizar = Button(root1, text="Atualizar Informações", width=30, command=atualizar)
+    btn_atualizar.place(x=250,y=160)
+    btn_excluir = Button(root1, text="Excluir Fornecedor", width=30, command=None)
+    btn_excluir.place(x=250,y=210)
+    btn_voltar0 = Button(root1, text="Voltar", width=10, command=destroy1)
+    btn_voltar0.place(x=322,y=290)
+
+def repor():
+
+    root0 = Tk()
+    root0.title("Reposição")
+    root0.geometry("700x700")
+
+    label_item = Label(root0, text="Nome do produto Desejado: ", width=25)
+    label_item.place(x=280,y=10)
+    entry_item = Entry(root0, width=30)
+    entry_item.place(x=280,y=40) 
+
+    label_codigo = Label(root0, text="Código do produto: ", width=25)
+    label_codigo.place(x=280,y=70)
+    entry_codigo = Entry(root0, width=30)
+    entry_codigo.place(x=280,y=100)
+
+    label_quantidade = Label(root0, text="Quantidade Desejada:", width=25)
+    label_quantidade.place(x=280,y=130)
+    entry_quantidade = Entry(root0, width=30)
+    entry_quantidade.place(x=280,y=160)
+
+    def destroy():
+        root0.destroy()
+    
+    def confirm():
+        if entry_item.get():
+            if entry_codigo.get():
+                if entry_quantidade.get():
+                    messagebox.showinfo('Cadastro', 'Reposição Efetuada Com Sucesso')
+                    root0.destroy()
+                else:
+                    messagebox.showerror('Cadastro', 'Alguma Área do Cadastro não Preenchida')
+
+
+
+    btn_voltar = Button(root0, text="Voltar", width=15, command=destroy)
+    btn_voltar.place(x=230,y=260)
+
+    btn_confirmar = Button(root0, text="Confirmar", width=15, command=confirm)
+    btn_confirmar.place(x=380,y=260)
+
+
+
+
+
+root = Tk()
+root.title("Sistema")
+root.geometry("400x400")
+
+label_escolhas = Label(root, text="Escolhas as Opções a Baixo: ", font=("Arial", 14), width=25)
+label_escolhas.place(x=85,y=10)
+
+btn_estoque = Button(root, text="Ver Estoque", width=20, command=None)
+btn_estoque.place(x=140,y=50)
+
+btn_reposição = Button(root, text="Repor Produto", width=20, command=repor)
+btn_reposição.place(x=140,y=90)
+
+btn_fornecedor = Button(root, text="Fornecedores", width=20, command=fornecedores)
+btn_fornecedor.place(x=140,y=130)
+
+btn_historico = Button(root, text="Histórico de Vendas", width=20, command=None)
+btn_historico.place(x=140,y=170)
+
+
+
+
+
+
+
+root.mainloop()
