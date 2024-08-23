@@ -1,0 +1,364 @@
+import json
+import os
+from tkinter import *
+from tkinter import messagebox, ttk
+
+# Lista global para armazenar fornecedores
+fornecedor = []
+
+def carregar_reposicao(arquivo):
+    """Carregar os dados do arquivo JSON de reposição."""
+    reposicao_dados = []
+    try:
+        with open(arquivo, 'r') as f:
+            reposicao_dados = json.load(f)
+    except FileNotFoundError:
+        messagebox.showinfo("Aviso", f"Arquivo {arquivo} não encontrado. Nenhum dado será exibido.")
+    except json.JSONDecodeError:
+        messagebox.showerror("Erro", f"Erro ao decodificar o arquivo JSON {arquivo}. Verifique o formato do arquivo.")
+    return reposicao_dados
+
+def ver_estoque():
+    root4 = Tk()
+    root4.title("Ver Estoque")
+    root4.geometry("700x700")
+
+    reposicao_dados = carregar_reposicao('reposicao.json')
+
+    if reposicao_dados:
+        # Criar a árvore para exibir os dados
+        tree = ttk.Treeview(root4, columns=("Nome", "Código", "Quantidade"), show='headings')
+        tree.heading("Nome", text="Nome")
+        tree.heading("Código", text="Código")
+        tree.heading("Quantidade", text="Quantidade")
+        tree.pack(fill=BOTH, expand=True)
+
+        # Inserir dados na árvore
+        for dado in reposicao_dados:
+            tree.insert("", END, values=(dado.get("Nome", ""), dado.get("Código", ""), dado.get("Quantidade", "")))
+    else:
+        messagebox.showinfo("Ver Estoque", "Nenhum dado de reposição encontrado.")
+
+    def destroy():
+        root4.destroy()
+     
+    btn_voltar = Button(root4, text="Voltar", width=15, command=destroy)
+    btn_voltar.pack(pady=10)
+     
+    def delete(): 
+        for item in tree.get_children():
+            tree.delete(item)
+    btn_limpar = Button(root4, text="Excluir", width=15, command=delete)
+    btn_limpar.pack(pady=20)
+
+def atualizar():
+    global entry_mudar, root3
+    root3 = Tk()
+    root3.title("Atualizar Informações")
+    root3.geometry("700x700")
+
+    label_mudar = Label(root3, text="Nome do Fornecedor Que Você Gostaria de Mudar as Informações: ", width=80)
+    label_mudar.place(x=90, y=10)
+    entry_mudar = Entry(root3, width=30)
+    entry_mudar.place(x=270, y=40)
+
+    btn_pesquisar = Button(root3, text="Pesquisar", width=10, command=lupa)
+    btn_pesquisar.place(x=530, y=30)
+
+def lupa():
+    global entry_mudar, root3
+    fornecedor_nome = entry_mudar.get()
+    for f in fornecedor:
+        if f['Nome'] == fornecedor_nome:
+            label_atualizar = Label(root3, text=f)
+            label_atualizar.place(x=270, y=60)
+            break
+    else:
+        messagebox.showerror('Pesquisar', 'Fornecedor não encontrado.')
+
+def add_fornecedor():
+    global root1
+    root2 = Tk()
+    root2.title("Cadastro")
+    root2.geometry("700x700")
+
+    label_nome = Label(root2, text="Nome do fornecedor: ", width=25)
+    label_nome.place(x=280, y=10)
+    entry_nome = Entry(root2, width=30)
+    entry_nome.place(x=280, y=40)
+
+    label_cpf = Label(root2, text="CPF/CNPJ: ", width=25)
+    label_cpf.place(x=280, y=70)
+    entry_cpf = Entry(root2, width=30)
+    entry_cpf.place(x=280, y=100)
+
+    label_quantidade = Label(root2, text="Tipo de Produto: ", width=25)
+    label_quantidade.place(x=280, y=130)
+    entry_quantidade = Entry(root2, width=30)
+    entry_quantidade.place(x=280, y=160)
+
+    label_endereço = Label(root2, text="Endereço do Fornecedor: ", width=25)
+    label_endereço.place(x=280, y=190)
+    entry_endereço = Entry(root2, width=30)
+    entry_endereço.place(x=280, y=220)
+
+    def confirm0():
+        if entry_nome.get() and entry_cpf.get() and entry_quantidade.get() and entry_endereço.get():
+            messagebox.showinfo('Cadastro', 'Fornecedor Adicionado com Sucesso')
+            add = {
+                "Nome": entry_nome.get(),
+                "CPF/CNPJ": entry_cpf.get(),
+                "Quantidade": entry_quantidade.get(),
+                "Endereço": entry_endereço.get()
+            }
+            fornecedor.append(add)
+            salvar_fornecedores()  # Salvar no arquivo JSON
+            root2.destroy()
+            root1.destroy()
+        else:
+            messagebox.showerror('Cadastro', 'Alguma Área do Cadastro não Preenchida')
+
+    def destroy0():
+        root2.destroy()
+
+    btn_voltar = Button(root2, text="Voltar", width=15, command=destroy0)
+    btn_voltar.place(x=230, y=260)
+
+    btn_confirmar = Button(root2, text="Confirmar", width=15, command=confirm0)
+    btn_confirmar.place(x=380, y=260)
+
+def fornecedores():
+    global root1
+    root1 = Tk()
+    root1.title("Fornecedores")
+    root1.geometry("700x700")
+
+    # Carregar fornecedores ao iniciar a tela
+    global fornecedor
+    fornecedor = carregar_fornecedores()
+
+    label_opcoes = Label(root1, text="Escolha as Opções Abaixo: ", font=("Arial", 14), width=25)
+    label_opcoes.place(x=225, y=10)
+
+    def destroy1():
+        root1.destroy()
+
+    btn_ver = Button(root1, text="Ver Fornecedores", width=30, command=ver_fornecedores)
+    btn_ver.place(x=250, y=60)
+    btn_add = Button(root1, text="Adicionar Fornecedor", width=30, command=add_fornecedor)
+    btn_add.place(x=250, y=110)
+    btn_atualizar = Button(root1, text="Atualizar Informações", width=30, command=atualizar)
+    btn_atualizar.place(x=250, y=160)
+    btn_excluir = Button(root1, text="Excluir Fornecedor", width=30, command=None)
+    btn_excluir.place(x=250, y=210)
+    btn_voltar0 = Button(root1, text="Voltar", width=10, command=destroy1)
+    btn_voltar0.place(x=322, y=290)
+
+def ver_fornecedores():
+    root6 = Tk()
+    root6.title("Ver Fornecedores")
+    root6.geometry("700x700")
+
+    # Criar a árvore para exibir os dados
+    tree = ttk.Treeview(root6, columns=("Nome", "CPF/CNPJ", "Quantidade", "Endereço"), show='headings')
+    tree.heading("Nome", text="Nome")
+    tree.heading("CPF/CNPJ", text="CPF/CNPJ")
+    tree.heading("Quantidade", text="Tipo de Produto")
+    tree.heading("Endereço", text="Endereço")
+    tree.pack(fill=BOTH, expand=True)
+
+    # Inserir dados na árvore
+    for dado in fornecedor:
+        tree.insert("", END, values=(dado.get("Nome", ""), dado.get("CPF/CNPJ", ""), dado.get("Quantidade", ""), dado.get("Endereço", "")))
+
+    def destroy():
+        root6.destroy()
+
+    btn_voltar = Button(root6, text="Voltar", width=15, command=destroy)
+    btn_voltar.pack(pady=10)
+
+def repor():
+    def save_to_json(item, codigo, quantidade):
+        try:
+            # Carregar dados existentes, se houver
+            try:
+                with open('reposicao.json', 'r') as f:
+                    reposicao_dados = json.load(f)
+            except FileNotFoundError:
+                reposicao_dados = []
+            except json.JSONDecodeError:
+                reposicao_dados = []
+
+            # Adicionar novos dados
+            data = {
+                "Nome": item,
+                "Código": codigo,
+                "Quantidade": quantidade
+            }
+            reposicao_dados.append(data)
+
+            # Salvar todos os dados no arquivo JSON
+            with open('reposicao.json', 'w') as f:
+                json.dump(reposicao_dados, f, indent=4)
+               
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao salvar dados: {e}")
+
+    root0 = Tk()
+    root0.title("Reposição")
+    root0.geometry("700x700")
+
+    label_item = Label(root0, text="Nome do produto Desejado: ", width=25)
+    label_item.place(x=280, y=10)
+    entry_item = Entry(root0, width=30)
+    entry_item.place(x=280, y=40)
+
+    label_codigo = Label(root0, text="Código do produto: ", width=25)
+    label_codigo.place(x=280, y=70)
+    entry_codigo = Entry(root0, width=30)
+    entry_codigo.place(x=280, y=100)
+
+    label_quantidade = Label(root0, text="Quantidade Desejada:", width=25)
+    label_quantidade.place(x=280, y=130)
+    entry_quantidade = Entry(root0, width=30)
+    entry_quantidade.place(x=280, y=160)
+
+    def confirm():
+        item = entry_item.get()
+        codigo = entry_codigo.get()
+        quantidade = entry_quantidade.get()
+
+        if item and codigo and quantidade:
+            save_to_json(item, codigo, quantidade)
+            messagebox.showinfo('Reposição', 'Reposição Efetuada Com Sucesso')
+            root0.destroy()
+        else:
+            messagebox.showerror('Reposição', 'Alguma Área do Cadastro não Preenchida')
+
+    def destroy():
+        root0.destroy()
+
+    btn_voltar = Button(root0, text="Voltar", width=15, command=destroy)
+    btn_voltar.place(x=230, y=260)
+
+    btn_confirmar = Button(root0, text="Confirmar", width=15, command=confirm)
+    btn_confirmar.place(x=380, y=260)
+
+def carregar_fornecedores():
+    """Carregar dados de fornecedores do arquivo JSON."""
+    try:
+        with open('fornecedores.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError:
+        return []
+
+def salvar_fornecedores():
+    """Salvar dados de fornecedores no arquivo JSON."""
+    try:
+        with open('fornecedores.json', 'w') as f:
+            json.dump(fornecedor, f, indent=4)
+    except Exception as e:
+        messagebox.showerror("Erro", f"Erro ao salvar dados: {e}")
+
+def exibir_arquivos_json():
+    root5 = Tk()
+    root5.title("Arquivos JSON Disponíveis")
+    root5.geometry("400x400")
+    
+    # Listar arquivos JSON na pasta atual
+    arquivos_json = [f for f in os.listdir() if f.endswith('.json')]
+    if not arquivos_json:
+        arquivos_json = ["Nenhum arquivo JSON encontrado"]
+
+    listbox = Listbox(root5)
+    listbox.pack(fill=BOTH, expand=True)
+
+    for arquivo in arquivos_json:
+        listbox.insert(END, arquivo)
+
+    def selecionar_arquivo(event):
+        selecionado = listbox.get(listbox.curselection())
+        if selecionado:
+            ver_estoque()
+
+    listbox.bind("<Double-1>", selecionar_arquivo)
+
+    def destroy():
+        root5.destroy()
+
+    def excluir():
+        root5.destroy()  # Ajustado para fechar a janela, pois 'excluir' não está implementado
+
+    btn_voltar = Button(root5, text="Voltar", width=15, command=destroy)
+    btn_voltar.pack(pady=10)
+    btn_excluir = Button(root5, text="Limpar", width=15, command=excluir)
+    btn_excluir.pack(pady=10)
+
+def saida_de_produtos():
+    root7 = Tk()
+    root7.title("Saída de Produtos")
+    root7.geometry("700x700")
+
+    reposicao_dados = carregar_reposicao('reposicao.json')
+    if reposicao_dados:
+        # Criar a árvore para exibir os dados
+        tree = ttk.Treeview(root7, columns=("Nome", "Quantidade", "Data de saída"), show='headings')
+        tree.heading("Nome", text="Nome")
+        tree.heading("Quantidade", text="Quantidade")
+        tree.heading("Data de saída", text="Data de saída")
+        tree.pack(fill=BOTH, expand=True)
+        
+        
+        entry_Nome =Entry(root7, width=36)
+        entry_Nome.place(x=10, y=60)
+
+        entry_Quantidade =Entry(root7, width=36)
+        entry_Quantidade.place(x=240, y=60)
+
+        entry_data_de_saida = Entry(root7, width=36)
+        entry_data_de_saida.place(x=470, y=60)
+        
+        btn_confirmar = Button(root7, text="Confirmar", width=15)
+        btn_confirmar.pack(pady=10)
+        
+           
+
+
+        btn_voltar = Button(root7, text="Voltar", width=15)
+        btn_voltar.pack(pady=10)
+        
+        def confirm():
+            Nome=entry_Nome.get()
+            Quantidade= entry_Quantidade.get()
+            if Nome and Quantidade:
+                save_to_json(Nome,Quantidade)
+                messagebox.showinfo('salvo','salvo com sucesso')
+                root0.destroy()
+            else:
+                messagebox.showerror('')
+        
+root = Tk()
+root.title("Sistema")
+root.geometry("400x400")
+
+label_escolhas = Label(root, text="Escolhas as Opções a Baixo: ", font=("Arial", 14), width=25)
+label_escolhas.place(x=85, y=10)
+
+btn_estoque = Button(root, text="Ver Estoque", width=20, command=ver_estoque)
+btn_estoque.place(x=140, y=50)
+
+btn_reposição = Button(root, text="Repor Produto", width=20, command=repor)
+btn_reposição.place(x=140, y=90)
+
+btn_fornecedor = Button(root, text="Fornecedores", width=20, command=fornecedores)
+btn_fornecedor.place(x=140, y=130)
+
+btn_historico = Button(root, text="Histórico de Vendas", width=20, command=None)
+btn_historico.place(x=140, y=170)
+
+btn_saida_de_produtos = Button(root, text="Saída de Produtos", width=20, command=saida_de_produtos)
+btn_saida_de_produtos.place(x=140, y=210)
+
+root.mainloop()
